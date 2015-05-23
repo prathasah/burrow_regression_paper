@@ -2,8 +2,6 @@ import MySQLdb as sql
 import numpy as np
 import csv
 
-
-###called tortuse_regression.py in local directory
 ######################################################################################
 
 # Open database connection
@@ -530,7 +528,7 @@ def extract_data_loose(filename, yearlist, burr_attr):
 				easting = burr_attr[burrow][2]
 				northing = burr_attr[burrow][3]
 				cursor = db.cursor()
-				cursor.execute( """  select tortoise_number from """ + filename + """  where find_in_set(month(date), %s)>0 and UTM_easting>= %s and UTM_easting<=%s and UTM_northing>=%s and UTM_northing<=%s ; """, (','.join(str(num) for num in seasondict[season]), easting-5, easting+5, northing-5, northing+5))
+				cursor.execute( """  select tortoise_number from """ + filename + """  where year(date)=%s and find_in_set(month(date), %s)>0 and UTM_easting>= %s and UTM_easting<=%s and UTM_northing>=%s and UTM_northing<=%s ; """, (year, ','.join(str(num) for num in seasondict[season]), easting-5, easting+5, northing-5, northing+5))
 				results = cursor.fetchall()
 				tortlist = list(set([row[0] for row in results]))
 				
@@ -610,7 +608,7 @@ if __name__ == "__main__":
 	files = ["BSV_aggregate", "CS_aggregate", "HW_aggregate","LM_aggregate", "MC_aggregate", "PV_aggregate", "SG_aggregate", "SL_aggregate", "FI_aggregate"]
 	sites = ["BSV", "CS", "HW", "LM", "MC", "PV", "SG", "SL", "FI"]
 	
-	writer = csv.writer(open('tortuse_16April2015.csv','wb'))
+	writer = csv.writer(open('tortuse_22May2015.csv','wb'))
 	header = ["site", "burrow_number", "year", "season_dv", "season", "azimuth",  "soil", "age", "surf_text", "washes_pct", "surf_ruf", "top_pos", "temp_avg", "Rain_tot", "rain_winter", "rain_summer", "temp_max", "temp_min", "local_tort_density", "local_burrow_density", "survey_freq",  "torts_sampled", "burrow_sampled", "days_sampled","bur_freq", "tort_tot", "tort_unq", "tort_unq_loose"] 
 	writer.writerow(header)
 	for site, filename in zip(sites, files):
